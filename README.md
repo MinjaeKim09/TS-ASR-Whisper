@@ -259,6 +259,82 @@ If you use our model or code, please, cite:
 }
 ```
 
+## AMI Dataset Organization
+
+This repository includes the AMI Meeting Corpus dataset with comprehensive annotations and audio data.
+
+### Dataset Structure
+
+**Location:** `data/ami/`
+
+The AMI dataset contains multi-modal meeting recordings with rich annotations including:
+- **abstractive/**: Meeting abstracts and summaries (XML format)
+- **dialogueActs/**: Dialog act annotations with speaker turns
+- **corpusResources/**: Meeting and participant metadata
+- **corpusdoc/**: Documentation and annotation guidelines
+- **decision/**: Decision annotations from meetings
+- Various annotation layers (emotions, topics, named entities, etc.)
+
+### Train/Dev/Test Splits
+
+**Manifest Location:** `data/manifests/`
+
+The dataset is organized into clear train/development/test splits:
+- **Train:** `ami-sdm_train_sc_cutset.jsonl.gz` (133 samples)
+- **Dev:** `ami-sdm_dev_sc_cutset.jsonl.gz` (18 samples)  
+- **Test:** `ami-sdm_test_sc_cutset.jsonl.gz` (16 samples)
+
+Each manifest file contains JSON entries with:
+- Recording IDs and metadata
+- Transcription text with speaker labels
+- Timestamp alignments and word-level annotations
+- Audio duration and channel information
+
+### Audio Files Organization
+
+**Location:** `data/ami/wav_db/`
+
+**Structure:**
+```
+wav_db/
+├── [MEETING_ID]/
+│   └── audio/
+│       └── [MEETING_ID].Array1-01.wav
+```
+
+**Audio Specifications:**
+- **Format:** WAV (16-bit PCM, mono, 16 kHz)
+- **Configuration:** Single distant microphone (SDM) - beamformed audio
+- **Total:** 169 audio files across 171 meeting directories
+- **Naming:** `[MEETING_ID].Array1-01.wav` (e.g., `TS3012a.Array1-01.wav`)
+
+**Meeting ID Patterns:**
+- **ES:** 60 meetings (Edinburgh scenario meetings)
+- **TS:** 40 meetings (TNO scenario meetings) 
+- **IS:** 38 meetings (IDIAP scenario meetings)
+- **EN:** 16 meetings (Edinburgh non-scenario meetings)
+- **IN:** 10 meetings (IDIAP non-scenario meetings)
+- **IB:** 7 meetings (IDIAP brief meetings)
+
+### Dataset Examples
+
+**Train Split Sample (TS3012a):**
+- Duration: ~14.3 minutes (859 seconds)
+- Speakers: Multiple participants with gender labels
+- Content: Meeting discussions with word-level alignments
+
+**Dev Split Sample (IS1008a):**
+- Duration: ~15.7 minutes (944 seconds)
+- Content: User interface design discussions
+- Speakers: Mixed gender participants
+
+**Test Split Sample (TS3003c):**
+- Duration: ~42.8 minutes (2570 seconds)
+- Content: Project management meetings
+- Rich multi-speaker dialogue with timestamps
+
+This Single Distant Microphone (SDM) version uses beamformed audio from microphone arrays, making it suitable for distant speech recognition tasks and multi-speaker scenarios.
+
 ## Fork Information
 
 This fork is maintained at: https://github.com/MinjaeKim09/TS-ASR-Whisper
@@ -270,6 +346,7 @@ Original repository: https://github.com/BUTSpeechFIT/TS-ASR-Whisper
 - Included pre-computed transcription comparisons
 - Enhanced analysis tools for WER evaluation
 - Improved transcription combination utilities
+- Comprehensive AMI dataset documentation and structure analysis
 
 ## Contributing
 We welcome contributions! If you'd like to add features or improve our pipeline, please open an issue or submit a pull request.
