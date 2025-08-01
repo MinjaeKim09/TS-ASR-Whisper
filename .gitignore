@@ -179,3 +179,13 @@ data/ami
 data/libri*
 data/manifests
 data/nsf
+
+# Additional large files and directories
+hub/
+*.tar.gz
+*.zip
+*.wav
+*.mp3
+*.flac
+*.jsonl.gz
+xet/

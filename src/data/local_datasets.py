@@ -521,6 +521,28 @@ class LhotseLongFormDataset(Dataset):
     def __len__(self):
         return len(self.single_speaker_cuts)
 
+    def get_subset(self, num_samples):
+        """Return a subset of the dataset with limited number of samples."""
+        if num_samples is None or num_samples >= len(self.single_speaker_cuts):
+            return self
+        
+        # Create a copy with subset of cuts
+        subset_cuts = self.single_speaker_cuts[:num_samples]
+        subset_dataset = LhotseLongFormDataset(
+            cutset=self.cutset,
+            is_multichannel=self.is_multichannel,
+            use_timestamps=self.use_timestamps,
+            text_norm=self.text_norm.__name__ if hasattr(self.text_norm, '__name__') else None,
+            use_features=self.use_features,
+            feature_extractor=self.feature_extractor,
+            audio_path_prefix=None,
+            audio_path_prefix_replacement=None,
+            references=self._references,
+            soft_vad_temp=self.soft_vad_temp
+        )
+        subset_dataset.single_speaker_cuts = subset_cuts
+        return subset_dataset
+
     def __getitem__(self, idx):
         if idx > len(self):
             raise ValueError('Out of range')

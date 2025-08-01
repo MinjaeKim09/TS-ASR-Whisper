@@ -1,0 +1,98 @@
+Step-by-Step Guide: Running the OFFICIAL DiCoW evaluation on Libri2Mix
+==============================================================
+This assumes a fresh Linux machine (or WSL2) and an NVIDIA GPU, but will also work on CPU (much slower).
+
+1. Clone the repository & sub-modules
+------------------------------------
+```bash
+# Replace <dest_dir> if you want a different path
+git clone https://github.com/yourfork/TS-ASR-Whisper.git <dest_dir>
+cd <dest_dir>
+# Pull the DiCoW modeling code submodule
+git submodule init
+git submodule update
+```
+
+2. Create and activate Python environment (≥3.11)
+-------------------------------------------------
+```bash
+conda create -n ts_asr_whisper python=3.11 -y    # or use `python -m venv venv`
+conda activate ts_asr_whisper
+```
+
+3. Install all requirements
+---------------------------
+```bash
+pip install -r requirements.txt
+# (Optional – faster on GPU)
+pip install flash-attn==2.7.2.post1
+# (Optional – if you plan to push to W&B)
+pip install wandb
+```
+
+4. Edit `configs/local_paths.sh`
+--------------------------------
+Open `configs/local_paths.sh` and set the following variables so they match *your* filesystem:
+• `EXPERIMENT_PATH` – where checkpoints & logs will be saved  
+• `AUDIO_PATH_PREFIX` / `AUDIO_PATH_PREFIX_REPLACEMENT` – usually leave blank unless your audio lives elsewhere  
+The defaults work when you stay inside the repo directory.
+
+5. Download/prepare the Libri2Mix dev set
+----------------------------------------
+The YAML expects a *cut-set* manifest at:
+```
+./data/manifests/libri2mix_mix_clean_sc_dev_cutset.jsonl.gz
+```
+Run the helper script (it downloads Libri2Mix, builds the manifest, and puts everything under `./data`):
+```bash
+./scripts/data/prepare.sh
+```
+If you already have Libri2Mix elsewhere, simply copy or symlink the manifest to the above location **or** edit
+`configs/decode/dicow_libri2mix_eval.yaml -> data.eval_cutsets` to the correct path.
+
+6. (Optionally) Login to HuggingFace
+------------------------------------
+The DiCoW checkpoint is hosted on HF. If you hit rate-limits or private models, run:
+```bash
+huggingface-cli login    # paste your token
+```
+
+7. Run the evaluation
+---------------------
+### Single machine (no job-scheduler)
+```bash
+python src/main.py +decode=dicow_libri2mix_eval
+```
+
+### SLURM cluster (edit GPU/CPU specs in the SBATCH header if needed)
+```bash
+sbatch ./scripts/training/submit_slurm.sh +decode=dicow_libri2mix_eval
+```
+For SGE/PBS use the corresponding wrapper in `scripts/training/` (see README §Usage).
+
+8. Where to find the results
+---------------------------
+By default, Hydra writes everything under
+```
+exp/dicow_evaluation/
+```
+Inside you will find timestamped folders containing:
+• `test/*/metrics.json` – WER, CP-WER, ORC-WER, etc.  
+• `predictions.jsonl.gz` – model predictions per cut  
+• `trainer_state.json` – full HuggingFace Trainer log
+
+9. Interpreting metrics
+-----------------------
+– `tcp_wer` = target-constrained per-speaker WER (main metric).  
+– `cp_wer`  = classical per-speaker WER.  
+– `orc_wer` = overlap-resistant WER.  
+– `tcorc_wer` = target-constrained ORC-WER.
+
+10. Troubleshooting tips
+------------------------
+• **GPU OOM** – reduce `training.per_device_eval_batch_size` in the YAML to 1 (already 1 by default) or run on CPU: `CUDA_VISIBLE_DEVICES="" python …`  
+• **Dataset path errors** – confirm the manifest *.jsonl.gz* exists and the *recording* paths inside are valid (adjust `audio_path_prefix*` variables if you keep audio elsewhere).  
+• **HF authentication** – set environment variable `HF_TOKEN=<your_token>` if job-scheduler strips interactive login.  
+• **W&B login errors** – either install wandb & login or set `WANDB_DISABLED=true`.
+
+That’s it — after step 7 you will have official DiCoW metrics on the Libri2Mix dev cut-set.

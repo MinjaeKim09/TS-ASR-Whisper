@@ -67,6 +67,10 @@ def main(cfg: Cfg) -> None:
 
     dev_dataset = build_dataset(data_args.dev_cutsets, data_args, decoding_args, text_norm, container,
                                 data_args.dev_diar_cutsets)
+    
+    # Limit dev dataset for faster evaluations during training
+    if data_args.dev_decoding_samples:
+        dev_dataset = dev_dataset.get_subset(data_args.dev_decoding_samples)
     eval_dataset = build_dataset(data_args.eval_cutsets, data_args, decoding_args, text_norm, container,
                                  data_args.eval_diar_cutsets)
     if model_args.mt_asr:

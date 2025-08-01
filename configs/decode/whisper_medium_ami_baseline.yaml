@@ -1,0 +1,41 @@
+# @package _global_
+
+experiment: "whisper_medium_ami_baseline"
+
+model:
+  whisper_model: "openai/whisper-medium"
+  reinit_from: null
+
+data:
+  eval_cutsets: ${oc.env:MANIFEST_DIR}/ami-sdm_test_sc_cutset.jsonl.gz
+  train_cutsets: 
+    - ${oc.env:MANIFEST_DIR}/ami-sdm_test_sc_cutset.jsonl.gz
+  dev_cutsets: 
+    - ${oc.env:MANIFEST_DIR}/ami-sdm_test_sc_cutset.jsonl.gz
+  audio_path_prefix: ${oc.env:AUDIO_PATH_PREFIX}
+  audio_path_prefix_replacement: ${oc.env:AUDIO_PATH_PREFIX_REPLACEMENT}
+  use_timestamps: true
+  eval_text_norm: "whisper_nsf"
+
+decoding:
+  decoding_ctc_weight: 0.0
+  condition_on_prev: false
+  length_penalty: 1.0
+
+training:
+  decode_only: true
+  do_train: false
+  do_eval: true
+  eval_metrics_list: ["tcp_wer", "cp_wer", "tcorc_wer"]
+  per_device_eval_batch_size: 2
+  generation_max_length: 150
+  bf16: true
+  bf16_full_eval: true
+  predict_with_generate: true
+  output_dir: ${oc.env:EXPERIMENT_PATH}/${experiment}
+  run_name: ${experiment}
+  remove_unused_columns: false
+  use_target_amplifiers: false
+
+hydra:
+  output_subdir: null

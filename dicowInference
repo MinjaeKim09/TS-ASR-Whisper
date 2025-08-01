@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# DiCoW Inference Script
+# Runs evaluation/inference on the pretrained DiCoW model from HuggingFace
+
+# Enable opening multiple files
+ulimit -n 4096
+
+# Enable to save bigger files
+ulimit -f unlimited
+
+# Enable more threads per process by increasing virtual memory
+ulimit -v unlimited
+
+# Source local paths configuration
+source $(dirname "${BASH_SOURCE[0]}")/configs/local_paths.sh
+
+# Set the pretrained DiCoW model path from HuggingFace
+export PRETRAINED_MODEL_PATH="BUT-FIT/DiCoW_v2"
+
+# Set AMI dataset paths to use the prepared manifests
+export AMI_EVAL_DATA_PATH="${SRC_ROOT}/data/manifests/ami-sdm_test_sc_cutset.jsonl.gz"
+export AMI_AUDIO_PATH_PREFIX=""
+export AMI_AUDIO_PATH_PREFIX_REPLACEMENT=""
+
+# Run inference using the custom DiCoW decode configuration on AMI dataset
+echo "Running DiCoW inference with pretrained model: ${PRETRAINED_MODEL_PATH}"
+echo "Using AMI dataset for evaluation..."
+eval "${SRC_ROOT}/sge_tools/python" "${SRC_ROOT}/src/main.py" +decode=dicow_ami_inference

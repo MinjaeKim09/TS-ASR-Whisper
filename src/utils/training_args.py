@@ -154,6 +154,8 @@ class DataArguments:
     train_with_diar_outputs: Optional[str] = field(default=None, metadata={"help": "Train with diar outputs."})
     use_diar: bool = field(default=False, metadata={
         "help": "Use diar outputs instead of ground-truth (affects e.g. long-form evaluation)."})
+    diarization_system: Optional[str] = field(default="pyannote", metadata={
+        "help": "Diarization system to use: 'pyannote' or 'diarizen'"})
     dev_diar_cutsets: Optional[List[str]] = field(default=None, metadata={
         "help": "Path to file with dev diar cutset (Lhotse format)"})
     eval_diar_cutsets: Optional[List[str]] = field(default=None, metadata={

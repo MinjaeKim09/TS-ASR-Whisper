@@ -7,7 +7,7 @@ source /path/to/.bashrc  # Source the user's bash configuration
 conda activate ts_asr_whisper  # Activate the freshly-created Conda environment.
 
 # Root directory of the source code.
-export SRC_ROOT=
+export SRC_ROOT="/home/minjaekim/hailMary/TS-ASR-Whisper"
 
 # Name of the Weights & Biases project.
 export WANDB_PROJECT=

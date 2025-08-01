@@ -1,0 +1,41 @@
+# @package _global_
+
+experiment: dicow_libri2mix_evaluation
+
+model:
+  whisper_model: "BUT-FIT/DiCoW_v2"
+  reinit_from: null  # Use pretrained DiCoW model directly
+  use_qk_biasing: false
+  ctc_weight: 0.3
+
+data:
+  eval_cutsets: "/home/minjaekim/hailMary/TS-ASR-Whisper/data/manifests/libri2mix_mix_clean_sc_dev_cutset.jsonl.gz"
+  dev_cutsets: "/home/minjaekim/hailMary/TS-ASR-Whisper/data/manifests/libri2mix_mix_clean_sc_dev_cutset.jsonl.gz"
+  audio_path_prefix: ""
+  audio_path_prefix_replacement: ""
+  use_timestamps: true
+  eval_text_norm: "whisper_nsf"
+  dev_decoding_samples: 10  # Very small sample for testing
+
+decoding:
+  decoding_ctc_weight: 0.0
+  condition_on_prev: false
+  length_penalty: 1.0
+
+training:
+  decode_only: true
+  do_train: false
+  eval_metrics_list: ["tcp_wer", "cp_wer", "orc_wer", "tcorc_wer"]
+  per_device_eval_batch_size: 1  # DiCoW requires careful memory management
+  bf16: true
+  bf16_full_eval: true
+  predict_with_generate: true
+  generation_max_length: 225
+  output_dir: "/home/minjaekim/hailMary/TS-ASR-Whisper/exp/dicow_evaluation"
+
+wandb:
+  project: "dicow_evaluation"
+  entity: null
+
+hydra:
+  output_subdir: null

@@ -1,0 +1,22 @@
+# @package _global_
+
+experiment: "dicow_ami_inference"
+
+model:
+  whisper_model: "BUT-FIT/DiCoW_v2"
+  reinit_from: null
+
+data:
+  eval_cutsets: ${oc.env:MANIFEST_DIR}/ami-sdm_test_sc_cutset.jsonl.gz
+  train_cutsets: 
+    - ${oc.env:MANIFEST_DIR}/ami-sdm_test_sc_cutset.jsonl.gz
+  dev_cutsets: 
+    - ${oc.env:MANIFEST_DIR}/ami-sdm_test_sc_cutset.jsonl.gz
+  audio_path_prefix: ""
+  audio_path_prefix_replacement: ""
+
+training:
+  decode_only: true
+  do_train: false
+  do_eval: true
+  eval_metrics_list: ["tcp_wer", "cp_wer", "tcorc_wer"]
