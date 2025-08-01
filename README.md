@@ -69,8 +69,8 @@ python combine_transcriptions.py
 
 The `transcription_comparisons/` directory contains pre-computed transcription results from different model configurations:
 - `ami_whisper_medium_training_transcriptions.txt` - Results from fine-tuned Whisper Medium (TCP_WER: 78.53%)
-- `dicow_ami_real_diarization_transcriptions.txt` - Results from DiCoW with real diarization
-- `whisper_medium_baseline_transcriptions.txt` - Baseline Whisper Medium results
+- `dicow_ami_real_diarization_transcriptions.txt` - Results from DiCoW with real diarization (TCP_WER: 17.45%)
+- `whisper_medium_baseline_transcriptions.txt` - Baseline Whisper Medium results (TCP_WER: ~230%+ - severe hallucination)
 
 These files provide detailed session-by-session transcription outputs with timestamps and speaker labels for performance analysis and comparison.
 
