@@ -1,6 +1,18 @@
-# Target Speaker ASR with Whisper
+# Target Speaker ASR with Whisper - Extended Fork
 
-This repository contains the official implementation of the following publications:
+This repository is a fork of the official Target Speaker ASR with Whisper implementation, extended with additional evaluation scripts, analysis tools, and pre-computed transcription comparisons.
+
+## Fork Additions
+
+This fork includes several enhancements over the original repository:
+- **Custom inference scripts** for different model configurations
+- **Transcription analysis tools** for comparing WER results across models
+- **Pre-computed transcription comparisons** showing performance differences
+- **Flexible transcription combination utilities**
+
+## Original Publications
+
+This repository contains the implementation of the following publications:
 
 - Target Speaker Whisper (available on [arxiv](https://arxiv.org/pdf/2409.09543))
 - DiCoW: Diarization-Conditioned Whisper for Target Speaker Automatic Speech Recognition (available on [arxiv](https://arxiv.org/pdf/2501.00114))
@@ -13,6 +25,54 @@ We built a gradio app demo to make playing around with our model easy for you. T
 4. Run `python app.py`
 5. Look for `* Running on public URL: {URL}`, copy&paste the `{URL}` to your browser and either use your microphone to record an audio sample or pass an audio recording.
 6. Hit `Submit` button and enjoy!
+
+## Custom Scripts and Analysis Tools
+
+This fork provides several additional scripts for evaluation and analysis:
+
+### Inference Scripts
+- **`dicowInference.py`** - Run inference using the pre-trained DiCoW model from HuggingFace
+- **`whisperMediumInference.py`** - Run baseline Whisper Medium inference without diarization
+- **`trainedWhisperRealDiarizationInference.py`** - Run inference with trained Whisper model using real diarization
+- **`ami_whisper_medium_baseline.py`** - Baseline AMI evaluation with Whisper Medium
+- **`ami_whisper_medium_training.py`** - Fine-tuned AMI evaluation with Whisper Medium
+
+### Analysis and Combination Tools
+- **`analyze_wer_results.py`** - Analyze Word Error Rate (WER) results and generate statistics
+- **`combine_transcriptions.py`** - Combine individual transcription files into master files
+- **`combine_transcriptions_flexible.py`** - Flexible transcription combination with configurable paths
+- **`generateRealDiarization.py`** - Generate real diarization outputs for evaluation
+
+### Usage Examples
+
+Run DiCoW inference:
+```bash
+python dicowInference.py
+```
+
+Run baseline Whisper inference:
+```bash
+python whisperMediumInference.py
+```
+
+Analyze WER results:
+```bash
+python analyze_wer_results.py
+```
+
+Combine transcription files:
+```bash
+python combine_transcriptions.py
+```
+
+### Transcription Comparisons
+
+The `transcription_comparisons/` directory contains pre-computed transcription results from different model configurations:
+- `ami_whisper_medium_training_transcriptions.txt` - Results from fine-tuned Whisper Medium (TCP_WER: 78.53%)
+- `dicow_ami_real_diarization_transcriptions.txt` - Results from DiCoW with real diarization
+- `whisper_medium_baseline_transcriptions.txt` - Baseline Whisper Medium results
+
+These files provide detailed session-by-session transcription outputs with timestamps and speaker labels for performance analysis and comparison.
 
 ## Checkpoints
 We've released 2 checkpoints:
@@ -199,8 +259,22 @@ If you use our model or code, please, cite:
 }
 ```
 
+## Fork Information
+
+This fork is maintained at: https://github.com/MinjaeKim09/TS-ASR-Whisper
+
+Original repository: https://github.com/BUTSpeechFIT/TS-ASR-Whisper
+
+### Fork Changes
+- Added custom inference and evaluation scripts
+- Included pre-computed transcription comparisons
+- Enhanced analysis tools for WER evaluation
+- Improved transcription combination utilities
+
 ## Contributing
-We welcome contributions! If you’d like to add features or improve our pipeline, please open an issue or submit a pull request.
+We welcome contributions! If you'd like to add features or improve our pipeline, please open an issue or submit a pull request.
 
 ## Contact
-For more information, feel free to contact us: [ipoloka@fit.vut.cz](mailto:ipoloka@fit.vut.cz), [xkleme15@vutbr.cz](mailto:xkleme15@vutbr.cz).
+For more information about the original work, feel free to contact: [ipoloka@fit.vut.cz](mailto:ipoloka@fit.vut.cz), [xkleme15@vutbr.cz](mailto:xkleme15@vutbr.cz).
+
+For questions about this fork, please open an issue on the GitHub repository.
