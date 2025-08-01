@@ -190,12 +190,6 @@ hub/
 *.jsonl.gz
 xet/
 
-# Transcription outputs and comparison files
-transcription_comparisons/
-*_transcriptions.txt
-*_results.txt
-*_comparisons.txt
-
 # Model artifacts and large output files
 *.pt
 *.pth
